@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nn-sites.github.io/NNsites/sitemap.xml
