@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NNsites | התאמת חבילה אישית</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --bg-dark: #0f172a; 
+            --primary: #3b82f6;
+            --discord: #5865F2;
+        }
+        body { 
+            font-family: 'Assistant', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .step-card {
+            display: none;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .step-card.active { display: block; animation: slideIn 0.4s ease-out; }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .option-btn {
+            background: rgba(255,255,255,0.05);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .option-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+        .option-btn.selected {
+            background: var(--primary);
+            border-color: white;
+            color: white;
+        }
+        .progress-bar {
+            transition: width 0.4s ease;
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <div class="max-w-2xl w-full">
+        <div class="text-center mb-10">
+            <div class="text-3xl font-black mb-2">NN<span class="text-blue-500 italic">sites</span></div>
+            <p class="text-slate-400">בואו נמצא את הפתרון המדויק לעסק שלכם</p>
+            
+            <div class="w-full bg-slate-800 h-2 rounded-full mt-6 overflow-hidden">
+                <div id="progress" class="progress-bar h-full bg-blue-500" style="width: 25%"></div>
+            </div>
+        </div>
+
+        <div id="step1" class="step-card active p-8 rounded-3xl shadow-2xl">
+            <h2 class="text-2xl font-extrabold mb-6 text-center">מה המטרה העיקרית של האתר?</h2>
+            <div class="grid gap-4">
+                <div class="option-btn p-5 rounded-2xl border border-transparent" onclick="nextStep(1, 'landing')">
+                    <div class="font-bold text-lg text-blue-400">דף נחיתה למכירת מוצר/שירות ספציפי</div>
+                    <div class="text-sm opacity-70">מושלם לקמפיינים ממומנים</div>
+                </div>
+                <div class="option-btn p-5 rounded-2xl border border-transparent" onclick="nextStep(1, 'business')">
+                    <div class="font-bold text-lg text-purple-400">אתר תדמית לעסק</div>
+                    <div class="text-sm opacity-70">הצגת העסק, גלריה ומידע ללקוחות</div>
+                </div>
+                <div class="option-btn p-5 rounded-2xl border border-transparent" onclick="nextStep(1, 'shop')">
+                    <div class="font-bold text-lg text-emerald-400">חנות אונליין (E-commerce)</div>
+                    <div class="text-sm opacity-70">מכירת מוצרים פיזיים או דיגיטליים ישירות באתר</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="step2" class="step-card p-8 rounded-3xl shadow-2xl">
+            <h2 class="text-2xl font-extrabold mb-6 text-center">כמה חשוב לכם לעדכן את התוכן בעצמכם?</h2>
+            <div class="grid gap-4">
+                <div class="option-btn p-5 rounded-2xl border border-transparent" onclick="nextStep(2, 'high')">
+                    <div class="font-bold text-lg">חשוב מאוד - אני רוצה לשלוט בהכל</div>
+                </div>
+                <div class="option-btn p-5 rounded-2xl border border-transparent" onclick="nextStep(2, 'low')">
+                    <div class="font-bold text-lg">מעדיף שאתם תתעסקו עם התחזוקה</div>
+                </div>
+            </div>
+            <button onclick="prevStep(2)" class="mt-6 text-slate-400 underline text-sm">חזור</button>
+        </div>
+
+        <div id="step3" class="step-card p-8 rounded-3xl shadow-2xl">
+            <h2 class="text-2xl font-extrabold mb-6 text-center">איזה מודל תשלום נוח לכם יותר?</h2>
+            <div class="grid gap-4">
+                <div class="option-btn p-5 rounded-2xl border border-transparent" onclick="nextStep(3, 'monthly')">
+                    <div class="font-bold text-lg">חודשי קבוע (הכל כלול)</div>
+                    <div class="text-sm opacity-70">עלות כניסה נמוכה, שירות שוטף</div>
+                </div>
+                <div class="option-btn p-5 rounded-2xl border border-transparent" onclick="nextStep(3, 'once')">
+                    <div class="font-bold text-lg">תשלום אחד גדול</div>
+                    <div class="text-sm opacity-70">בעלות מלאה על האתר ללא התחייבות</div>
+                </div>
+            </div>
+            <button onclick="prevStep(3)" class="mt-6 text-slate-400 underline text-sm">חזור</button>
+        </div>
+
+        <div id="result" class="step-card p-8 rounded-3xl shadow-2xl text-center">
+            <div class="text-6xl mb-6">🎉</div>
+            <h2 class="text-3xl font-extrabold mb-2">מצאנו את החבילה בשבילך!</h2>
+            <p class="text-slate-400 mb-8">לפי התשובות שלך, החבילה המומלצת היא:</p>
+            
+            <div class="bg-blue-600/20 border border-blue-500 p-6 rounded-2xl mb-8">
+                <div id="result-title" class="text-2xl font-bold text-blue-400 mb-2">בחישוב...</div>
+                <div id="result-price" class="text-4xl font-black">--</div>
+            </div>
+
+            <a id="whatsapp-link" href="#" class="block w-full py-4 bg-green-600 hover:bg-green-500 rounded-xl font-bold text-xl transition-all shadow-lg shadow-green-600/20">
+                דברו איתי בוואטסאפ להזמנה
+            </a>
+            <button onclick="location.reload()" class="mt-6 text-slate-500 text-sm italic">התחל מהתחלה</button>
+        </div>
+    </div>
+
+    <script>
+        let answers = {};
+
+        function nextStep(current, choice) {
+            answers[current] = choice;
+            document.getElementById(`step${current}`).classList.remove('active');
+            
+            let next = current + 1;
+            let progress = (next / 4) * 100;
+            document.getElementById('progress').style.width = `${progress}%`;
+
+            if (next <= 3) {
+                document.getElementById(`step${next}`).classList.add('active');
+            } else {
+                calculateResult();
+            }
+        }
+
+        function prevStep(current) {
+            document.getElementById(`step${current}`).classList.remove('active');
+            document.getElementById(`step${current-1}`).classList.add('active');
+            document.getElementById('progress').style.width = `${((current-1)/4)*100}%`;
+        }
+
+        function calculateResult() {
+            document.getElementById('result').classList.add('active');
+            let title = "";
+            let price = "";
+            
+            // Logic based on answers
+            if (answers[1] === 'landing') {
+                title = "דף נחיתה ממיר";
+                price = answers[3] === 'monthly' ? "₪99 לחודש" : "₪500 חד-פעמי";
+            } else if (answers[1] === 'business') {
+                title = "אתר תדמית עסקי";
+                price = answers[3] === 'monthly' ? "₪149 לחודש" : "₪1,000 חד-פעמי";
+            } else {
+                title = "חנות אונליין פרימיום";
+                price = answers[3] === 'monthly' ? "₪299 לחודש" : "₪2,000+ חד-פעמי";
+            }
+
+            document.getElementById('result-title').innerText = title;
+            document.getElementById('result-price').innerText = price;
+            
+            // Create custom WhatsApp message
+            let msg = encodeURIComponent(`היי, עשיתי את השאלון באתר והחבילה שהתאימה לי היא: ${title} במודל ${answers[3]}. אשמח לפרטים!`);
+            document.getElementById('whatsapp-link').href = `https://wa.me/972533752747?text=${msg}`;
+        }
+    </script>
+</body>
+</html>
